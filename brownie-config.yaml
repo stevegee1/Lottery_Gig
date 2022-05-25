@@ -1,0 +1,12 @@
+dependencies:
+    - smartcontractkit/chainlink-brownie-contracts@0.4.0
+    - OpenZeppelin/openzeppelin-contracts@4.6.0
+compiler:
+   solc:
+     remappings:
+        - "@chainlink=smartcontractkit/chainlink-brownie-contracts@0.4.0"
+        - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.6.0"
+dotenv: .env
+networks:
+   mainnet-fork-dev:
+      eth_usd_priceFeed: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419"

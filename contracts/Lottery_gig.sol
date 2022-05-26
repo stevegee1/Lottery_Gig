@@ -3,8 +3,9 @@
 pragma solidity ^0.8.0;
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "../requestRandomValue.sol";
 
-contract Lottery is Ownable {
+contract Lottery is Ownable, requestRandomValue {
     mapping(address => uint256) public addressTopay; //mapping gambler addresses to how much they pay to gamble
     address payable[] public arrayOfplayers; //array of addresses of the gamblers
     uint256 public usdEntrancefee; //entrance fee in USD
@@ -17,8 +18,11 @@ contract Lottery is Ownable {
         CALCULATING_WINNER
     }
     Lottery_State public lottery_state;
+    requestRandomValue requestRandomValue_;
 
-    constructor(address _priceFeedAddress, uint64 subscriptionId) {
+    constructor(address _priceFeedAddress)
+        requestRandomValue()
+    {
         usdEntrancefee = 50 * 10**18; //smallest unit of ether is wei (10**18 decimal)
         priceFeed = AggregatorV3Interface(_priceFeedAddress);
         lottery_state = Lottery_State.CLOSED;
@@ -51,6 +55,13 @@ contract Lottery is Ownable {
 
     function endLottery() public onlyOwner {
         lottery_state = Lottery_State.CALCULATING_WINNER;
+        s_requestId = COORDINATOR.requestRandomWords(
+      keyHash,
+      s_subscriptionId,
+      requestConfirmations,
+      callbackGasLimit,
+      numWords
+    );
     }
 
     function getEntrancefee() public view returns (uint256) {

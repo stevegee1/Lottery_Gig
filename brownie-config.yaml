@@ -10,3 +10,5 @@ dotenv: .env
 networks:
    mainnet-fork-dev:
       eth_usd_priceFeed: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419"
+wallets:
+   from_key: "0x3f5c4deb845142bbabcf53868d73fbb482d0a9330b305a4c0a5f39aff575245a"

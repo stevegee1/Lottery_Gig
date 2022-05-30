@@ -7,9 +7,11 @@ import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract requestRandomValue is VRFConsumerBaseV2, Ownable {
+
+ contract requestRandomValue is VRFConsumerBaseV2, Ownable{
   VRFCoordinatorV2Interface COORDINATOR;
   LinkTokenInterface LINKTOKEN;
+   // This value will be in range 0-99999
 
   // Rinkeby coordinator. For other networks,
   // see https://docs.chain.link/docs/vrf-contracts/#configurations
@@ -40,8 +42,9 @@ contract requestRandomValue is VRFConsumerBaseV2, Ownable {
   uint256 public s_requestId;
   uint64 public s_subscriptionId;
   address s_owner;
+ 
 
-  constructor() VRFConsumerBaseV2(vrfCoordinator) {
+   constructor() VRFConsumerBaseV2(vrfCoordinator) {
     COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
     LINKTOKEN = LinkTokenInterface(link_token_contract);
     s_owner = msg.sender;
@@ -50,7 +53,7 @@ contract requestRandomValue is VRFConsumerBaseV2, Ownable {
   }
 
   // Assumes the subscription is funded sufficiently.
-  function requestRandomWords() internal onlyOwner {
+  function requestRandomWords() internal  onlyOwner {
     // Will revert if subscription is not set and funded.
     s_requestId = COORDINATOR.requestRandomWords(
       keyHash,
@@ -60,13 +63,10 @@ contract requestRandomValue is VRFConsumerBaseV2, Ownable {
       numWords
     );
   }
-
-  function fulfillRandomWords(
+    function fulfillRandomWords(
     uint256, /* requestId */
     uint256[] memory randomWords
-  ) internal override {
-    s_randomWords = randomWords;
-  }
+  ) internal virtual override{}
 
   // Create a new subscription when the contract is initially deployed.
   function createNewSubscription() private onlyOwner {
